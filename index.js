@@ -63,7 +63,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', async (request, response ) => {
     let user ;
-    const { token } = request.cookies.token;
+    const token = request.cookies.token;
     const isverified = jwt.verify( token, secretpk, {}, ( error, decoded ) => {
         if (error) throw error ;
         user = decoded ;

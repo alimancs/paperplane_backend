@@ -64,14 +64,14 @@ app.post('/login', async (request, response) => {
 app.get( '/profile', async (request, response ) => {
     let user ;
     const { token } = request.cookies;
-    const isverified = jwt.verify( token, secretpk, {}, ( error,decoded ) => {
+    const isverified = jwt.verify( token, secretpk, {}, ( error, decoded ) => {
         if (error) throw error ;
         user = decoded ;
     })
     if (isverified) {
-        response.json(user)
+        response.json(user);
     } else {
-        response.status(400).json('no user logged in')
+        response.status(400).json('no user logged in');
     }
 })
 
@@ -149,19 +149,15 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
 
             await postDoc.save();
             response.json(postDoc);
-            // await postDoc.update( {
-            //     title,
-            //     summary,
-            //     content,
-            //     cover: newPath ? newPath : postDoc.cover,
-            // })
         } else {
             response.status(400).json('you are not the Author');
         }
     })
 })
 
-app.listen(5000);
+app.listen('https://paperplane-blog-api.onrender.com', ()=> {
+    console.log('server running on paperplane-blog-api.com')
+});
 
 
 

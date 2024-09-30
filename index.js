@@ -51,7 +51,7 @@ app.post('/login', async (request, response) => {
                 username,
                 id:userDoc._id
                 }, secretpk)
-        response.cookie( 'token', token ).json(token);
+        response.cookie( 'token', token ).json('okay');
 
         } else {
             response.status(400).json("invalid username or password");
@@ -61,12 +61,18 @@ app.post('/login', async (request, response) => {
 })
 
 // handle token verification 
-app.get( '/profile', (request, response ) => {
+app.get( '/profile', async (request, response ) => {
+    let user ;
     const { token } = request.cookies;
-    jwt.verify( token, secretpk, {}, ( errormessage, userInfo ) => {
-        if (errormessage) throw errormessage;
-        response.json(userInfo);
+    const isverified = jwt.verify( token, secretpk, {}, ( error,decoded ) => {
+        if (error) throw error ;
+        user = decoded ;
     })
+    if (isverified) {
+        response.json(user)
+    } else {
+        response.status(400).json('no user logged in')
+    }
 })
 
 // handle logging out

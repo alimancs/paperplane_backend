@@ -19,7 +19,7 @@ const app = express();
 
 app.use(cors( { 
     credentials:true,
-    origin:'https://paperplane-blog.onrender.com/'}));
+    origin:'https://paperplane-blog.onrender.com'}));
 app.use(express.json());
 app.use(cookieParser());
 

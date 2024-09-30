@@ -108,7 +108,7 @@ app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response)
 
 // handles displaying post on homepage
 app.get( '/posts', async ( request, response ) => {
-   const posts = await  postm.find().populate("user", [ 'username' ]).sort('descending').limit(20);
+   const posts = await  postm.find().populate("user", [ 'username' ]);
    response.json(posts);
 })
 

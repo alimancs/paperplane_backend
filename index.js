@@ -47,16 +47,12 @@ app.post('/login', async (request, response) => {
         const passOk = bcrypt.compareSync( password, userDoc.password );
     
         if (passOk) {
-            jwt.sign( { 
+           const token =  jwt.sign( { 
                 username,
                 id:userDoc._id
-                },
-                secretpk, {}, (errormessage, token)=>{
-            if (errormessage) throw errormessage;
+                }, secretpk)
+        response.cookie( 'token', token ).json("Okay");
 
-            response.cookie( 'token', token ).json("Okay");
-
-            })
         } else {
             response.status(400).json("invalid username or password");
         }

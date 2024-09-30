@@ -51,7 +51,7 @@ app.post('/login', async (request, response) => {
                 username,
                 id:userDoc._id
                 }, secretpk)
-        response.cookie( 'token', token ).json("Okay");
+        response.cookie( 'token', token ).json(token);
 
         } else {
             response.status(400).json("invalid username or password");

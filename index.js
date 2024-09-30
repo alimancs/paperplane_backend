@@ -155,9 +155,7 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
     })
 })
 
-app.listen('https://paperplane-blog-api.onrender.com', ()=> {
-    console.log('server running on paperplane-blog-api.com')
-});
+app.listen('https://paperplane-blog-api.onrender.com');
 
 
 

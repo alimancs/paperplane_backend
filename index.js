@@ -50,7 +50,8 @@ app.post('/login', async (request, response) => {
            const token =  jwt.sign( { 
                 username,
                 id:userDoc._id
-                }, secretpk)
+                }, secretpk,
+                { expiresIn : '10h'})
         response.cookie( 'token', token ).json(token);
 
         } else {

@@ -61,18 +61,13 @@ app.post('/login', async (request, response) => {
 })
 
 // handle token verification 
-app.get( '/profile', async (request, response ) => {
-    let user ;
+app.get( '/profile', (request, response ) => {
     const token = request.cookies.token;
-    const isverified = jwt.verify( token, secretpk, {}, ( error, decoded ) => {
+    jwt.verify( token, secretpk, {}, ( error, decoded ) => {
         if (error) throw error ;
-        user = decoded ;
+        response.json(decoded) ;
     })
-    if (isverified) {
-        response.json(user);
-    } else {
-        response.status(400).json('no user logged in');
-    }
+    
 })
 
 // handle logging out
@@ -155,7 +150,7 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
     })
 })
 
-app.listen(4000);
+app.listen(5000);
 
 
 

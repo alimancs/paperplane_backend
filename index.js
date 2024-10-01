@@ -65,6 +65,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     const token = request.headers.authorization;
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     if ( token === '' ) {
         response.json('no-user');
     } else {

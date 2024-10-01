@@ -38,7 +38,7 @@ app.post('/register',async (request, response)=>{
 
 // handle login
 app.post('/login', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username, password } = request.body;
     const userDoc = await userm.findOne( { username } );
     if (!userDoc) {

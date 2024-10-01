@@ -65,16 +65,20 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     const token = request.headers.authorization;
+    if ( token === '' ) {
+        response.json('no-user');
+    } else {
     jwt.verify( token, secretpk, {}, ( error, decoded ) => {
         if (error) throw error ;
         response.json(decoded) ;
-    })   
+    })  
+    } 
 })
 
 // handle logging out
-app.post( '/logout', (request, response) => {
-    response.cookie('token', '').json(" user logged out");
-})
+// app.post( '/logout', (request, response) => {
+//     response.cookie('token', '').json(" user logged out");
+// })
 
 // handles adding of posts
 app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response) => {

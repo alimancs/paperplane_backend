@@ -64,11 +64,12 @@ app.post('/login', async (request, response) => {
 
 // handle token verification 
 app.get( '/profile', (request, response ) => {
-    const { token } = request.cookies;
-    jwt.verify( JSON.stringify(token), JSON.stringify(secretpk), {}, ( error, decoded ) => {
-        if (error) throw error ;
-        response.json(decoded) ;
-    })
+    const token = request.headers.authorization;
+    // jwt.verify( token, secretpk, {}, ( error, decoded ) => {
+    //     if (error) throw error ;
+    //     response.json(decoded) ;
+    // })
+    response.json(token);
     
 })
 

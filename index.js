@@ -84,7 +84,7 @@ app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response)
     const parts = originalname.split('.');
     const  extension = parts[1];
     const newPath = path+'.'+extension;
-    const { token } = request.cookies;
+    const { token } = request.headers.authorization;
 
     fs.renameSync( path, newPath );
     

@@ -65,12 +65,10 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     const token = request.headers.authorization;
-    // jwt.verify( token, secretpk, {}, ( error, decoded ) => {
-    //     if (error) throw error ;
-    //     response.json(decoded) ;
-    // })
-    response.json(token);
-    
+    jwt.verify( token, secretpk, {}, ( error, decoded ) => {
+        if (error) throw error ;
+        response.json(decoded) ;
+    })   
 })
 
 // handle logging out

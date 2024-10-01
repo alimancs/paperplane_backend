@@ -53,7 +53,7 @@ app.post('/login', async (request, response) => {
                 id:userDoc._id
                 }, secretpk,
                 { expiresIn : '10h'})
-        response.cookie( 'token', token ).json(token);
+        response.cookie( 'token', token ).json( [ token, userDoc ]);
 
         } else {
             response.status(400).json("invalid username or password");

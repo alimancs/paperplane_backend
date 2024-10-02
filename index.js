@@ -65,24 +65,24 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const str = request.headers.authorization;
-    let token;
-    if (str.includes('=')) {
-       token = str.replace('=', '');
-    } else {
-       token = str;
-    }
+    const str = request.cookies.authToken;
+    // let token;
+    // if (str.includes('=')) {
+    //    token = str.replace('=', '');
+    // } else {
+    //    token = str;
+    // }
 
-    if ( token === '' ) {
-        response.json('no-user');
-    } else {
-    jwt.verify( token, secretpk, {}, ( error, decoded ) => {
-        if (error) throw error ;
-        response.json(decoded) ;
-    })  
-    } 
+    // if ( token === '' ) {
+    //     response.json('no-user');
+    // } else {
+    // jwt.verify( token, secretpk, {}, ( error, decoded ) => {
+    //     if (error) throw error ;
+    //     response.json(decoded) ;
+    // })  
+    // } 
     
-    response.json(token)
+    response.json(str)
 })
 
 // handle logging out

@@ -100,16 +100,16 @@ app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const cookieStr = request.headers.authorization;
     const cookieObj = cookieStrToObj(cookieStr);
-    let data;
-    jwt.verify( cookieObj.authToken, secretpk, {}, (error, decodedData) => {
-        if ( error ) {
-           data = null;
-        } else {
-           data = decodedData;
-        }
+    // let data;
+    // jwt.verify( cookieObj.authToken, secretpk, {}, (error, decodedData) => {
+    //     if ( error ) {
+    //        data = null;
+    //     } else {
+    //        data = decodedData;
+    //     }
 
-    })
-    response.json( data );
+    // })
+    response.json( cookieObj.authToken );
 })
 
 // handle logging out

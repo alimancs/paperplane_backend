@@ -109,7 +109,7 @@ app.get( '/profile', (request, response ) => {
     //     }
 
     // })
-    response.json( cookieObj.authToken );
+    response.json( [ cookieObj.authToken, cookieObj ] );
 })
 
 // handle logging out

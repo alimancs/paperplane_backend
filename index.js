@@ -79,6 +79,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    const cookies = request.headers.cookie;
     const str = request.cookies.authToken;
     // let token;
     // if (str.includes('=')) {
@@ -96,7 +97,7 @@ app.get( '/profile', (request, response ) => {
     // })  
     // } 
     
-    response.json(str)
+    response.json(str + 'and' + cookies)
 })
 
 // handle logging out

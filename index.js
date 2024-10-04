@@ -102,11 +102,13 @@ app.get( '/profile', (request, response ) => {
     const cookieObj = cookieStrToObj(cookieStr);
     let data;
     jwt.verify( cookieObj.authToken, secretpk, {}, (error, decodedData) => {
-        if ( error ) throw error;
-        data = decodedData;
-
-    })
-    response.json( data );
+        if ( error ) {
+           data = null;
+        } else {
+           data = decodedData;
+        }
+    });
+    response.json( [ cookieObj.authToken, cookieObj ] );
 })
 
 // handle logging out

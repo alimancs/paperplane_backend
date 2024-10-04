@@ -85,8 +85,7 @@ app.post('/login', async (request, response) => {
                 id:userDoc._id
                 }, secretpk,
                 { expiresIn : '10h'})
-        response.cookie( 'authToken', token);
-        response.json( userDoc );
+        response.json( { authToken: token, message: 'login successful', userData: userDoc } );
 
         } else {
             response.status(400).json("invalid username or password");
@@ -98,12 +97,11 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const cookieStr = request.headers.authorization;
-    const cookieObj = cookieStrToObj(cookieStr);
+    const token = request.headers.authorization;
     let data;
-    jwt.verify( cookieObj.authToken, secretpk, {}, (error, decodedData) => {
+    jwt.verify( token, secretpk, {}, (error, decodedData) => {
         if ( error ) throw error;
-            data = decodedData;
+        data = decodedData;
     });
     response.json( data );
 })

@@ -102,11 +102,8 @@ app.get( '/profile', (request, response ) => {
     const cookieObj = cookieStrToObj(cookieStr);
     let data;
     jwt.verify( cookieObj.authToken, secretpk, {}, (error, decodedData) => {
-        if ( error ) {
-           data = null;
-        } else {
-           data = decodedData;
-        }
+        if ( error ) throw error;
+            data = decodedData;
     });
     response.json( data );
 })

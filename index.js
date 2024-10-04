@@ -108,7 +108,7 @@ app.get( '/profile', (request, response ) => {
            data = decodedData;
         }
     });
-    response.json( [ cookieObj.authToken, cookieObj ] );
+    response.json( data );
 })
 
 // handle logging out

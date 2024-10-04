@@ -85,7 +85,7 @@ app.post('/login', async (request, response) => {
                 id:userDoc._id
                 }, secretpk,
                 { expiresIn : '10h'})
-        response.cookie( 'authToken', token, { httpOnly: true, secure: true } );
+        response.cookie( 'authToken', token);
         response.json( userDoc );
 
         } else {

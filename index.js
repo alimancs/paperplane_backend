@@ -85,7 +85,10 @@ app.post('/login', async (request, response) => {
                 id:userDoc._id
                 }, secretpk,
                 { expiresIn : '10h'})
-        response.json( { authToken: token, message: 'login successful', userData: userDoc } );
+        response.json( { authToken: token,
+                          message: 'login successful',
+                           userData: { username, id: userDoc._id },
+                        } );
 
         } else {
             response.status(400).json("invalid username or password");

@@ -40,8 +40,10 @@ app.post('/register',async (request, response)=>{
 // functions 
 function verifyToken(token) {
     try {
-      const decodedData = jwt.verify(token, secretpk);
-      return decodedData;
+      jwt.verify(token, secretpk, ( error, decodedData) => {
+        if ( error ) throw error;
+        return decodedData;
+      });
     } catch (error) {
       return null; // Token is invalid or expired
     }

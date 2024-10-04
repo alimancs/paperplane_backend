@@ -47,6 +47,22 @@ function verifyToken(token) {
     }
   }
 
+function cookieStrToObj(cookieStr) {
+    const cookieArr = cookieStr.split(';');
+    const cookieObj = {};
+    for (let cookie of cookieArr) {
+        if (cookie.includes('=')) {
+           const [key, value] = cookie.trim().split('=');
+           cookieObj[key] = value;
+        } else {
+            const key = cookie;
+            const value = cookie;
+            cookieObj[key] = value;
+        }
+    }
+    return cookieObj;
+}
+
 
 
 // handle login
@@ -79,8 +95,8 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const cookies = request.headers.cookie;
-    const str = request.cookies.authToken;
+    const cookieStr = request.headers.authorization;
+    const cookieObj = cookieStrToObj(cookieStr);
     // let token;
     // if (str.includes('=')) {
     //    token = str.replace('=', '');
@@ -97,7 +113,7 @@ app.get( '/profile', (request, response ) => {
     // })  
     // } 
     
-    response.json(str + 'and' + cookies)
+    response.json( cookieObj );
 })
 
 // handle logging out

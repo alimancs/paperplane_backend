@@ -36,6 +36,19 @@ app.post('/register',async (request, response)=>{
     response.json(userDoc);
 })
 
+
+// functions 
+function verifyToken(token) {
+    try {
+      const decodedData = jwt.verify(token, secretpk);
+      return decodedData;
+    } catch (error) {
+      return null; // Token is invalid or expired
+    }
+  }
+
+
+
 // handle login
 app.post('/login', async (request, response) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
@@ -53,7 +66,8 @@ app.post('/login', async (request, response) => {
                 id:userDoc._id
                 }, secretpk,
                 { expiresIn : '10h'})
-        response.cookie( 'token', token ).json( [ token, userDoc ]);
+        response.cookie( 'authToken', token, { httpOnly: true, secure: true } );
+        response.json( userDoc );
 
         } else {
             response.status(400).json("invalid username or password");
@@ -65,7 +79,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const str = request.cookies
+    const str = request.cookies.authToken;
     // let token;
     // if (str.includes('=')) {
     //    token = str.replace('=', '');

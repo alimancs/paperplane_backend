@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const uploadMiddleWare = multer( { dest : 'uploads/' });
 const fs = require("fs");
+const { error } = require("console");
 
 const secretpk = "jvdsygueduysdknrtetykgdej";
 const salt = bcrypt.genSaltSync(10);
@@ -99,7 +100,15 @@ app.get( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const cookieStr = request.headers.authorization;
     const cookieObj = cookieStrToObj(cookieStr);
-    const data = verifyToken(cookieObj.authToken);
+    let data;
+    jwt.verify( cookieObj.authToken, secretpk, {}, (error, decodedData) => {
+        if ( error ) {
+           data = null;
+        } else {
+           data = decodedData;
+        }
+
+    })
     response.json( data );
 })
 

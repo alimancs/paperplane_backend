@@ -125,7 +125,7 @@ app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response)
     const parts = originalname.split('.');
     const  extension = parts[1];
     const newPath = path+'.'+extension;
-    const { token } = request.headers.authorization;
+    const token = request.headers.authorization;
 
     fs.renameSync( path, newPath );
     
@@ -172,7 +172,7 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
         fs.renameSync( path, newPath);
     }
 
-    const { token } = request.cookies;
+    const token = request.headers.authorization;
 
     jwt.verify( token, secretpk, {}, async ( error, author ) => {
         if (error) throw error;

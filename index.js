@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // server static files 
-app.use( '/uploads', express.static( __dirname + '/uploads' ))
+app.use( '/uploads', express.static( __dirname + '/uploads' ));
 
 // handle user registration
 app.post('/register',async (request, response)=>{
@@ -103,8 +103,11 @@ app.get( '/profile', (request, response ) => {
     const token = request.headers.authorization;
     let data;
     jwt.verify( token, secretpk, {}, (error, decodedData) => {
-        if ( error ) throw error;
-        data = decodedData;
+        if ( error ) {
+            data = null;
+        } else {
+            data = decodedData;
+        }
     });
     response.json( data );
 })

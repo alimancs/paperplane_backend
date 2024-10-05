@@ -14,13 +14,19 @@ const { error } = require("console");
 const secretpk = "jvdsygueduysdknrtetykgdej";
 const salt = bcrypt.genSaltSync(10);
 
-mongoose.connect("mongodb+srv://aerlee:h28gUA4SQfMzboiY@cluster0.dqfv1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+mongoose.connect("mongodb+srv://aerlee:h28gUA4SQfMzboiY@cluster0.dqfv1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+.then(()=> {
+    console.log('connected to Mongo Database');
+})
+.catch( err => {
+    console.error(err);
+})
 
 const app = express();
 
 app.use(cors( { 
     credentials:true,
-    origin:'https://paperplane-blog.onrender.com'}));
+    origin:[ 'https://paperplane-blog.onrender.com', 'http://localhost:3000' ]}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -148,7 +154,8 @@ app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response)
 // handles displaying post on homepage
 app.get( '/posts', async ( request, response ) => {
    const posts = await  postm.find().populate("user", [ 'username' ]);
-   response.json(posts);
+   const postReverse = posts.reverse();
+   response.json(postReverse);
 })
 
 // handles page view 
@@ -190,6 +197,16 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
             response.status(400).json('you are not the Author');
         }
     })
+})
+
+app.delete('/editpost/delete/:id', async (request, response) => {
+   const { id } = request.params;
+   const deletePost = await postm.findByIdAndDelete(id);
+
+   if (!deletePost) {
+    response.status(400).json('something went wrong');
+   }
+   response.json('post deleted successfully');
 })
 
 app.listen(5000);

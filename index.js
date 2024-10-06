@@ -76,7 +76,7 @@ function cookieStrToObj(cookieStr) {
 
 // handle login
 app.post('/login', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com, http://localhost:3000');
     const { username, password } = request.body;
     const userDoc = await userm.findOne( { username } );
     if (!userDoc) {
@@ -105,7 +105,7 @@ app.post('/login', async (request, response) => {
 
 // handle token verification 
 app.get( '/profile', (request, response ) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com, http://localhost:3000');
     const token = request.headers.authorization;
     let data;
     jwt.verify( token, secretpk, {}, (error, decodedData) => {

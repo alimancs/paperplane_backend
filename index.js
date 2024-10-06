@@ -202,14 +202,15 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
 app.delete('/editpost/delete/:id', async (request, response) => {
    const { id } = request.params;
    const token = request.headers.authorization;
+   const postDoc = await postm.findById(id);
 
     jwt.verify( token, secretpk, {}, async ( error, author ) => {
         if (error) throw error;
 
-        const postDoc = await postm.findById(id);
         const isAuthor = JSON.stringify(postDoc.user) === JSON.stringify(author.id);
 
         if (isAuthor) {
+            postDoc.deleteOne()
 
             const deletePost = await postm.findByIdAndDelete(id);
 
@@ -217,7 +218,7 @@ app.delete('/editpost/delete/:id', async (request, response) => {
                 response.status(400).json('something went wrong');
                }
                response.json('post deleted successfully');
-               
+
         } else {
             response.status(400).json('you are not the Author');
         }

@@ -76,7 +76,7 @@ function cookieStrToObj(cookieStr) {
 
 // handle login
 app.post('/login', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    response.setHeader('Access-Control-Allow-Origin', 'http:localhost:3000');
     const { username, password } = request.body;
     const userDoc = await userm.findOne( { username } );
     if (!userDoc) {
@@ -105,7 +105,7 @@ app.post('/login', async (request, response) => {
 
 // handle token verification 
 app.get( '/profile', (request, response ) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    response.setHeader('Access-Control-Allow-Origin', 'http:localhost:3000');
     const token = request.headers.authorization;
     let data;
     jwt.verify( token, secretpk, {}, (error, decodedData) => {
@@ -201,12 +201,28 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
 
 app.delete('/editpost/delete/:id', async (request, response) => {
    const { id } = request.params;
-   const deletePost = await postm.findByIdAndDelete(id);
+   const token = request.headers.authorization;
 
-   if (!deletePost) {
-    response.status(400).json('something went wrong');
-   }
-   response.json('post deleted successfully');
+    jwt.verify( token, secretpk, {}, async ( error, author ) => {
+        if (error) throw error;
+
+        const postDoc = await postm.findById(id);
+        const isAuthor = JSON.stringify(postDoc.user) === JSON.stringify(author.id);
+
+        if (isAuthor) {
+
+            const deletePost = await postm.findByIdAndDelete(id);
+
+            if (!deletePost) {
+                response.status(400).json('something went wrong');
+               }
+               response.json('post deleted successfully');
+               
+        } else {
+            response.status(400).json('you are not the Author');
+        }
+    })
+
 })
 
 app.listen(5000);

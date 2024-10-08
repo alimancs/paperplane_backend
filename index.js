@@ -40,6 +40,8 @@ app.post('/register',async (request, response)=>{
     const userDoc = await userm.create(
          { username,
            password:bcrypt.hashSync( password, salt ),
+           followers:0,
+           following:0,
          } );
     response.json(userDoc);
 })
@@ -145,6 +147,7 @@ app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response)
             content, 
             cover : newPath,
             user : id,
+            likes:0,
           })
 
         response.json(postDoc);
@@ -255,5 +258,3 @@ app.listen(80);
 
 
 
-//h28gUA4SQfMzboiY  aerlee
-//mongodb+srv://aerlee:h28gUA4SQfMzboiY@cluster0.dqfv1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

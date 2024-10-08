@@ -6,6 +6,7 @@ const postSchema = new Schema({
     summary : String,
     content : String,
     cover : String,
+    likes : Number,
     user : { 
         type: Schema.Types.ObjectId,
         ref:'user',

@@ -79,7 +79,7 @@ function cookieStrToObj(cookieStr) {
 
 // handle login
 app.post('/login', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username, password } = request.body;
     const userDoc = await userm.findOne( { username } );
     if (!userDoc) {
@@ -109,7 +109,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
 
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const token = request.headers.authorization;
     let data;
 
@@ -129,13 +129,9 @@ app.get( '/profile', (request, response ) => {
 // })
 
 // handles adding of posts
-app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response) => {
-    const { title, summary, content } = request.body;
+app.post( '/addpost', async (request, response) => {
+    const { title, summary, content, cover } = request.body;
 
-    const { originalname, path } = request.file;
-    const parts = originalname.split('.');
-    const  extension = parts[1];
-    const newPath = path+'.'+extension;
     const token = request.headers.authorization;
 
     fs.renameSync( path, newPath );
@@ -147,7 +143,7 @@ app.post( '/addpost', uploadMiddleWare.single('file'), async (request, response)
             title, 
             summary, 
             content, 
-            cover : newPath,
+            cover,
             user : id,
             likes:0,
           })
@@ -172,8 +168,8 @@ app.get( '/post/:id', async ( request, response) => {
 })
 
 // handles post edit 
-app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => {
-    const { title, summary, content, id } = request.body;
+app.put('/post', async ( request, response) => {
+    const { title, summary, content, cover, id } = request.body;
     let newPath = null;
 
     // include file extension to the path
@@ -195,7 +191,7 @@ app.put('/post', uploadMiddleWare.single('file'), async ( request, response) => 
             postDoc.title = title;
             postDoc.summary = summary;
             postDoc.content = content;
-            postDoc.cover = newPath ? newPath : postDoc.cover;
+            postDoc.cover = cover;
 
             await postDoc.save();
             response.json(postDoc);

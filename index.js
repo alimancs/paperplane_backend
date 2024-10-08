@@ -170,16 +170,6 @@ app.get( '/post/:id', async ( request, response) => {
 // handles post edit 
 app.put('/post', async ( request, response) => {
     const { title, summary, content, cover, id } = request.body;
-    let newPath = null;
-
-    // include file extension to the path
-    if (request.file) {
-        const { originalname, path } = request.file;
-        const parts = originalname.split('.');
-        const  extension = parts[1];
-        newPath = path+'.'+extension;
-        fs.renameSync( path, newPath);
-    }
 
     const token = request.headers.authorization;
 
@@ -191,7 +181,7 @@ app.put('/post', async ( request, response) => {
             postDoc.title = title;
             postDoc.summary = summary;
             postDoc.content = content;
-            postDoc.cover = cover;
+            postDoc.cover = cover ? cover : postDoc.cover;
 
             await postDoc.save();
             response.json(postDoc);

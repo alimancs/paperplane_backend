@@ -130,6 +130,7 @@ app.get( '/profile', (request, response ) => {
 
 // handles adding of posts
 app.post( '/addpost', async (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { title, summary, content, cover } = request.body;
 
     const token = request.headers.authorization;
@@ -169,6 +170,7 @@ app.get( '/post/:id', async ( request, response) => {
 
 // handles post edit 
 app.put('/post', async ( request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { title, summary, content, cover, id } = request.body;
 
     const token = request.headers.authorization;

@@ -179,10 +179,10 @@ app.put('/post/:id', async ( request, response) => {
     jwt.verify( token, secretpk, {}, async ( error, author ) => {
         if (error) throw error;
         console.log(id);
-        const postDoc = await postm.findById(id).populate();
+        const postDoc = await postm.findById(id);
         console.log(postDoc);
         console.log(author);
-        const isAuthor = JSON.stringify(postDoc.user._id) === JSON.stringify(author._id);
+        const isAuthor = JSON.stringify(postDoc.user) === JSON.stringify(author.id);
         if (isAuthor) {
             postDoc.title = title;
             postDoc.summary = summary;

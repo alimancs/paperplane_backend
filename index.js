@@ -177,6 +177,7 @@ app.put('/post', async ( request, response) => {
 
     jwt.verify( token, secretpk, {}, async ( error, author ) => {
         if (error) throw error;
+        console.log(id);
         const postDoc = await postm.findById(id)
         console.log(postDoc)
         const isAuthor = JSON.stringify(postDoc.user._id) === JSON.stringify(author._id);

@@ -134,8 +134,6 @@ app.post( '/addpost', async (request, response) => {
     const { title, summary, content, cover } = request.body;
 
     const token = request.headers.authorization;
-
-    fs.renameSync( path, newPath );
     
     jwt.verify( token, secretpk, {}, async (error, userInfo ) => {
         const id = userInfo.id;

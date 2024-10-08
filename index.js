@@ -181,6 +181,7 @@ app.put('/post/:id', async ( request, response) => {
         console.log(id);
         const postDoc = await postm.findById(id).populate();
         console.log(postDoc);
+        console.log(author);
         const isAuthor = JSON.stringify(postDoc.user._id) === JSON.stringify(author._id);
         if (isAuthor) {
             postDoc.title = title;

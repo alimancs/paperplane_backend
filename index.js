@@ -228,12 +228,13 @@ app.delete('/editpost/delete/:id', async (request, response) => {
 app.get('/profile/:username', async (request, response ) => {
 
     const { username } = request.params;
-    const user = await userm.findOne(username);
+    const user = await userm.findOne( { username } );
     const date = user.createdat;
-    const posts = await postm.find();
+    const posts = await  postm.find().populate("user", [ 'username' ]);
+    const postReverse = posts.reverse();
     const userposts = [];
 
-    posts.map( post => {
+    postReverse.map( post => {
         if ( post.user.username === username ) {
             userposts.push(post);
         }

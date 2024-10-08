@@ -169,9 +169,10 @@ app.get( '/post/:id', async ( request, response) => {
 })
 
 // handles post edit 
-app.put('/post', async ( request, response) => {
+app.put('/post/:id', async ( request, response) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const { title, summary, content, cover, id } = request.body;
+    const { title, summary, content, cover } = request.body;
+    const { id } = request.params;
 
     const token = request.headers.authorization;
 

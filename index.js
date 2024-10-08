@@ -224,6 +224,30 @@ app.delete('/editpost/delete/:id', async (request, response) => {
 
 })
 
+// get a userpost
+app.get('/profile/:username', async (request, response ) => {
+
+    const { username } = request.params;
+    const user = await userm.findOne(username);
+    const date = user.createdat;
+    const posts = await postm.find();
+    const userposts = [];
+
+    posts.map( post => {
+        if ( post.user.username === username ) {
+            userposts.push(post);
+        }
+    });
+
+    const data = { 
+        joinDate : date,
+        posts : userposts,
+    };
+    response.json(data);
+
+});
+
+
 app.listen(5000);
 
 

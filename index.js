@@ -10,11 +10,12 @@ const multer = require('multer');
 const uploadMiddleWare = multer( { dest : 'uploads/' });
 const fs = require("fs");
 const { error } = require("console");
+require('dotenv').config();
 
-const secretpk = "jvdsygueduysdknrtetykgdej";
+const secretpk = process.env.SECRET_PASSKEY;
 const salt = bcrypt.genSaltSync(10);
 
-mongoose.connect("mongodb+srv://aerlee:h28gUA4SQfMzboiY@cluster0.dqfv1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(process.env.DATABASE_KEY)
 .then(()=> {
     console.log('connected to Mongo Database');
 })

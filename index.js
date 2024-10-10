@@ -27,13 +27,13 @@ const app = express();
 
 app.use(cors( { 
     credentials:true,
-    origin:[ 'https://paperplane-blog.onrender.com', 'http://localhost:3000' ]}));
+    origin:'https://paperplane-blog.onrender.com'}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded( { extended : false }));
 
 // server static files 
-app.use( '/uploads', express.static( __dirname + '/uploads' ));
+// app.use( '/uploads', express.static( __dirname + '/uploads' ));
 
 // handle user registration
 app.post('/register',async (request, response)=>{

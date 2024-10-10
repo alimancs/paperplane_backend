@@ -131,7 +131,7 @@ app.get( '/profile', (request, response ) => {
 
 // handles adding of posts
 app.post( '/addpost', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    // response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     // const { title, summary, content, cover } = request.body;
     // console.log(request.body);
     response.json(request.body);

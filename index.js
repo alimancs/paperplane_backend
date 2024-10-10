@@ -30,6 +30,7 @@ app.use(cors( {
     origin:[ 'https://paperplane-blog.onrender.com', 'http://localhost:3000' ]}));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded( { extended : false }));
 
 // server static files 
 app.use( '/uploads', express.static( __dirname + '/uploads' ));
@@ -132,7 +133,8 @@ app.get( '/profile', (request, response ) => {
 app.post( '/addpost', async (request, response) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { title, summary, content, cover } = request.body;
-    console.log(request.body)
+    console.log(request.body);
+
 
     const token = request.headers.authorization;
     

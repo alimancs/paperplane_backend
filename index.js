@@ -132,6 +132,7 @@ app.get( '/profile', (request, response ) => {
 app.post( '/addpost', async (request, response) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { title, summary, content, cover } = request.body;
+    console.log(request.body)
 
     const token = request.headers.authorization;
     

@@ -131,28 +131,26 @@ app.get( '/profile', (request, response ) => {
 
 // handles adding of posts
 app.post( '/addpost', async (request, response) => {
-    // response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    // const { title, summary, content, cover } = request.body;
-    // console.log(request.body);
-    response.json(request.body);
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    const { title, summary, content, cover } = request.body;
 
 
-    // const token = request.headers.authorization;
+    const token = request.headers.authorization;
     
-    // jwt.verify( token, secretpk, {}, async (error, userInfo ) => {
-    //     const id = userInfo.id;
+    jwt.verify( token, secretpk, {}, async (error, userInfo ) => {
+        const id = userInfo.id;
 
-    //     const postDoc = await postm.create({
-    //         title, 
-    //         summary, 
-    //         content, 
-    //         cover,
-    //         user : id,
-    //         likes:0,
-    //       })
+        const postDoc = await postm.create({
+            title, 
+            summary, 
+            content, 
+            cover,
+            user : id,
+            likes:0,
+          })
 
-    //     response.json(postDoc);
-    // });
+        response.json(postDoc);
+    });
     
 })
 

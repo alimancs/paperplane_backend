@@ -80,7 +80,7 @@ function cookieStrToObj(cookieStr) {
 
 // handle login
 app.post('/login', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     const { username, password } = request.body;
     const userDoc = await userm.findOne( { username } );
     if (!userDoc) {

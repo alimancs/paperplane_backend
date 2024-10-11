@@ -110,7 +110,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.get( '/profile', (request, response ) => {
 
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     const token = request.headers.authorization;
     let data;
 

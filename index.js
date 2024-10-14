@@ -68,7 +68,7 @@ async function sendOTP(email, otp) {
         service:'outlook',
         auth : {
             user:'aliman2952003@outlook.com',
-            pass:'29may2003',
+            pass:'29May2003{}',
         },
     });
     let info = await transporter.sendMail({
@@ -293,7 +293,7 @@ app.post('/send-otp', async (request, response) => {
 //handles verification of OTP;
 
 app.post('/verify-otp', (request, response) => {
-    const { otp } = request.body;
+    const { otp }= request.body;
     const isverified = verifyOTP(otp);
     response.json({ verification : isverified});
 })

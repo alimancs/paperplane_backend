@@ -68,7 +68,7 @@ async function sendOTP(email, otp) {
         service:'outlook',
         auth : {
             user:'aliman2952003@outlook.com',
-            pass:'29May2003{}'
+            pass:'29may2003',
         },
     });
     let info = await transporter.sendMail({

@@ -5,6 +5,9 @@ const { Schema, model } = mongoose;
 const userSchema = new Schema({
     username:{type:String, reguired:true, unique:true, min:4},
     password:{type:String, required:true},
+    email:{type:String, required:true},
+    firstname:{type:String},
+    lastname:{type:String},
     followers:{type:Number},
     following:{type:Number},
     },

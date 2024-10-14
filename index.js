@@ -1,3 +1,4 @@
+// Dependencies --------------------------------------------------------
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -6,14 +7,13 @@ const postm = require('./models/post');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const multer = require('multer');
-const uploadMiddleWare = multer( { dest : 'uploads/' });
-const fs = require("fs");
-const { error } = require("console");
+const speakeasy = require('speakeasy');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const secretpk = process.env.SECRET_PASSKEY;
 const salt = bcrypt.genSaltSync(10);
+const secretOTPkey = process.env.OTP_SECRETKEY;
 
 mongoose.connect(process.env.DATABASE_KEY)
 .then(()=> {
@@ -35,20 +35,12 @@ app.use(express.urlencoded( { extended : false }));
 // server static files 
 // app.use( '/uploads', express.static( __dirname + '/uploads' ));
 
-// handle user registration
-app.post('/register',async (request, response)=>{
-    const { username, password } = request.body;
-    const userDoc = await userm.create(
-         { username,
-           password:bcrypt.hashSync( password, salt ),
-           followers:0,
-           following:0,
-         } );
-    response.json(userDoc);
-})
 
+//------------------------------------------------------------------------------------------------------------
 
-// functions 
+// FUNCTIONS
+
+//very token and returns decoded data
 function verifyToken(token) {
     try {
       jwt.verify(token, secretpk, ( error, decodedData) => {
@@ -60,22 +52,61 @@ function verifyToken(token) {
     }
   }
 
-function cookieStrToObj(cookieStr) {
-    const cookieArr = cookieStr.split(';');
-    const cookieObj = {};
-    for (let cookie of cookieArr) {
-        if (cookie.includes('=')) {
-           const [key, value] = cookie.trim().split('=');
-           cookieObj[key] = value;
-        } else {
-            const key = cookie;
-            const value = cookie;
-            cookieObj[key] = value;
-        }
-    }
-    return cookieObj;
+// generates OTP
+function generateOTP() {
+    const otp = speakeasy.totp({
+        secret:secretOTPkey,
+        encoding:'base32',
+    });
+    return otp;
 }
 
+// send OTP to recipient email
+async function sendOTP(email, otp) {
+   
+    let transporter = nodemailer.createTransport({
+        service:'outlook',
+        auth : {
+            user:'aliman2952003@outlook.com',
+            pass:'29May2003{}'
+        },
+    });
+    let info = await transporter.sendMail({
+        from:`"OTP service" <aliman2952003@outlook.com>`,
+        to:email,
+        subject:'Your OTP code',
+        text: `Your email confirmation OTP is: ${otp}`,
+    });
+
+    console.log(`message: ${info.messageId}`);
+}
+
+// verify OTP
+function verifyOTP(otp) {
+    let status ;
+    return status;
+}
+
+
+
+//-------------------------------------------------------------------------------------------------------------
+
+// ENDPOINTS
+
+// handle user registration
+app.post('/register',async (request, response)=>{
+    const { username, password, email, firstname, lastname } = request.body;
+    const userDoc = await userm.create(
+         { username,
+           password:bcrypt.hashSync( password, salt ),
+           email,
+           firstname,
+           lastname,
+           followers:0,
+           following:0,
+         } );
+    response.json(userDoc);
+})
 
 
 // handle login
@@ -112,7 +143,7 @@ app.get( '/profile', (request, response ) => {
 
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const token = request.headers.authorization;
-    let data;
+    let data; 
 
     jwt.verify( token, secretpk, {}, (error, decodedData) => {
         if ( error ) {
@@ -245,6 +276,27 @@ app.get('/profile/:username', async (request, response ) => {
     response.json(data);
 
 });
+
+//handles creating of OTp and sending it to recipient
+app.post('/send-otp', async (request, response) => {
+    const { email } = request.body;
+    const otp = generateOTP();
+    try {
+       await sendOTP(email, otp);
+       response.json({message:'sent'});
+    } catch(err) {
+       console.error(err);
+       response.status(500).json({error:'failed to send OTP'})
+    }
+})
+
+//handles verification of OTP;
+
+app.post('/verify-otp', (request, response) => {
+    const { otp } = request.body;
+    const isverified = verifyOTP(otp);
+    response.json({ verification : isverified});
+})
 
 
 app.listen(80);

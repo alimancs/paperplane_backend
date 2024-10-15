@@ -95,7 +95,7 @@ function sendOTP(email, otp) {
 
 // verify OTP
 function verifyOTP(otp) {
-    let status  = speakeasy.verify( {
+    let status  = speakeasy.totp.verify( {
         secret:secretOTPkey.base32,
         token:otp,
         window:1,

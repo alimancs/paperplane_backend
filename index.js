@@ -83,10 +83,10 @@ async function sendOTP(email, otp) {
         }, (err, info)=> {
             if (err) {
                 console.error(err);
-                return err;
+                return { error: 'email not sent, something went wrong'};
             } else {
                 console.log(`message: ${info.response}`);
-                return ({ message :`email sent : ${info.response}`})
+                return ({ message :`email sent- ${info.response}`})
             }
         }
 );

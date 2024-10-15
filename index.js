@@ -55,10 +55,12 @@ function verifyToken(token) {
   }
 
 // generates OTP
-function generateOTP() {
-    const otp = speakeasy.totp({
-        secret:secretOTPkey.base32,
-        window:1,
+function generateOTP(secret) {
+    const otp = speakeasy.time({
+        secret:secret.base32,
+        encoding:'base32',
+        step:300,// 5 mins
+        window:0
     });
     return otp;
 }
@@ -94,11 +96,13 @@ function sendOTP(email, otp) {
 }
 
 // verify OTP
-function verifyOTP(otp) {
-    let status  = speakeasy.totp.verify( {
-        secret:secretOTPkey.base32,
+function verifyOTP(otp, secretc) {
+    let status  = speakeasy.time.verify( {
+        secret:secretc.base32,
+        encoding:'base32',
         token:otp,
-        window:1,
+        step:300, // 5 mins
+        window:0,
     })
     return status;
 }
@@ -295,22 +299,22 @@ app.get('/profile/:username', async (request, response ) => {
 
 //handles creating of OTp and sending it to recipient
 app.post('/send-otp', (request, response) => {
-    const { email } = request.body;
-    const otp = generateOTP();  
+    const { email, secret } = request.body;
+    const otp = generateOTP(secret);  
     console.log(`email address: ${email}, OTP: ${otp}`)
     try {
        const isSent = sendOTP(email, otp);
        response.json({ sent:true });
     } catch(err) {
-       response.status(500).json({sent:false})
+       response.status(400).json({sent:false});
     }
 })
 
 //handles verification of OTP;
 
 app.post('/verify-otp', (request, response) => {
-    const { otp }= request.body;
-    const isverified = verifyOTP(otp);
+    const { otp, secret }= request.body;
+    const isverified = verifyOTP(otp, secret);
     response.json({ verification : isverified});
 })
 

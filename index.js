@@ -14,6 +14,7 @@ require('dotenv').config();
 const secretpk = process.env.SECRET_PASSKEY;
 const salt = bcrypt.genSaltSync(10);
 const secretOTPkey = process.env.OTP_SECRETKEY;
+const outlookPass = process.env.OUTLOOK_PASS;
 
 mongoose.connect(process.env.DATABASE_KEY)
 .then(()=> {
@@ -65,25 +66,40 @@ function generateOTP() {
 async function sendOTP(email, otp) {
    
     let transporter = nodemailer.createTransport({
-        service:'outlook',
+        host:'smtp.office365.com',
+        port:587,
+        secure:false,
         auth : {
             user:'aliman2952003@outlook.com',
-            pass:'29May2003{}',
+            pass:outlookPass,
         },
     });
-    let info = await transporter.sendMail({
-        from:`"OTP service" <aliman2952003@outlook.com>`,
+    await transporter.sendMail({
+        from:`aliman2952003@outlook.com>`,
         to:email,
-        subject:'Your OTP code',
-        text: `Your email confirmation OTP is: ${otp}`,
-    });
+        subject:'Your One-time passcode',
+        text: `Your email confirmation OTP is: ${otp}`
+        }, (err, info)=> {
+            if (err) {
+                console.error(err);
+                return err;
+            } else {
+                console.log(`message: ${info.response}`);
+                return ({ message :`email sent : ${info.response}`})
+            }
+        }
+);
 
-    console.log(`message: ${info.messageId}`);
 }
 
 // verify OTP
 function verifyOTP(otp) {
-    let status ;
+    let status  = speakeasy.totp.verify( {
+        secret:secretOTPkey,
+        encoding:'base32',
+        token:otp,
+        window:1,
+    })
     return status;
 }
 
@@ -282,8 +298,8 @@ app.post('/send-otp', async (request, response) => {
     const { email } = request.body;
     const otp = generateOTP();
     try {
-       await sendOTP(email, otp);
-       response.json({message:'sent'});
+       const isSent = await sendOTP(email, otp);
+       response.json(isSent);
     } catch(err) {
        console.error(err);
        response.status(500).json({error:'failed to send OTP'})

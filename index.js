@@ -64,7 +64,7 @@ function generateOTP() {
 }
 
 // send OTP to recipient email
-async function sendOTP(email, otp) {
+function sendOTP(email, otp) {
    
     let transporter = nodemailer.createTransport({
         host:'smtp.gmail.com',
@@ -75,7 +75,7 @@ async function sendOTP(email, otp) {
             pass:emailPass,
         },
     });
-    await transporter.sendMail({
+    transporter.sendMail({
         from:`aliman2952003@outlook.com`,
         to:email,
         subject:'Your One-time passcode',
@@ -297,7 +297,8 @@ app.get('/profile/:username', async (request, response ) => {
 //handles creating of OTp and sending it to recipient
 app.post('/send-otp', async (request, response) => {
     const { email } = request.body;
-    const otp = generateOTP();
+    const otp = generateOTP();  
+    console.log(`email address:`)
     try {
        const isSent = await sendOTP(email, otp);
        response.json(isSent);

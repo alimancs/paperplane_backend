@@ -295,16 +295,15 @@ app.get('/profile/:username', async (request, response ) => {
 });
 
 //handles creating of OTp and sending it to recipient
-app.post('/send-otp', async (request, response) => {
+app.post('/send-otp', (request, response) => {
     const { email } = request.body;
     const otp = generateOTP();  
-    console.log(`email address:`)
+    console.log(`email address: ${email}, OTP: ${otp}`)
     try {
-       const isSent = await sendOTP(email, otp);
-       response.json(isSent);
+       const isSent = sendOTP(email, otp);
+       response.json({ sent:true });
     } catch(err) {
-       console.error(err);
-       response.status(500).json({error:'failed to send OTP'})
+       response.status(500).json({sent:false})
     }
 })
 

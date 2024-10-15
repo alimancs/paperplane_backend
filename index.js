@@ -66,12 +66,12 @@ function generateOTP() {
 async function sendOTP(email, otp) {
    
     let transporter = nodemailer.createTransport({
-        host:'smtp.office365.com',
+        host:'smtp.gmail.com',
         port:587,
         secure:false,
         auth : {
-            user:'aliman2952003@outlook.com',
-            pass:outlookPass,
+            user:'aliman2952003@gmail.com',
+            pass:'Alimanahmedigbabo',
         },
     });
     await transporter.sendMail({

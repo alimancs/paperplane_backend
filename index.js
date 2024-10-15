@@ -75,7 +75,7 @@ async function sendOTP(email, otp) {
         },
     });
     await transporter.sendMail({
-        from:`aliman2952003@outlook.com>`,
+        from:`aliman2952003@outlook.com`,
         to:email,
         subject:'Your One-time passcode',
         text: `Your email confirmation OTP is: ${otp}`

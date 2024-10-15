@@ -14,7 +14,8 @@ require('dotenv').config();
 const secretpk = process.env.SECRET_PASSKEY;
 const salt = bcrypt.genSaltSync(10);
 const secretOTPkey = process.env.OTP_SECRETKEY;
-const outlookPass = process.env.OUTLOOK_PASS;
+const emailPass = process.env.EMAIL_PASS;
+const sender = process.env.EMAIL_ADD;
 
 mongoose.connect(process.env.DATABASE_KEY)
 .then(()=> {
@@ -70,8 +71,8 @@ async function sendOTP(email, otp) {
         port:587,
         secure:false,
         auth : {
-            user:'aliman2952003@gmail.com',
-            pass:'Alimanahmedigbabo',
+            user:sender,
+            pass:emailPass,
         },
     });
     await transporter.sendMail({

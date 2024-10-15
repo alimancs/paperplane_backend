@@ -13,7 +13,7 @@ require('dotenv').config();
 
 const secretpk = process.env.SECRET_PASSKEY;
 const salt = bcrypt.genSaltSync(10);
-const secretOTPkey = process.env.OTP_SECRETKEY;
+const secretOTPkey = speakeasy.generateSecret({length:20});
 const emailPass = process.env.EMAIL_PASS;
 const sender = process.env.EMAIL_ADD;
 
@@ -57,8 +57,8 @@ function verifyToken(token) {
 // generates OTP
 function generateOTP() {
     const otp = speakeasy.totp({
-        secret:secretOTPkey,
-        encoding:'base32',
+        secret:secretOTPkey.base32,
+        window:1,
     });
     return otp;
 }
@@ -95,9 +95,8 @@ function sendOTP(email, otp) {
 
 // verify OTP
 function verifyOTP(otp) {
-    let status  = speakeasy.totp.verify( {
-        secret:secretOTPkey,
-        encoding:'base32',
+    let status  = speakeasy.verify( {
+        secret:secretOTPkey.base32,
         token:otp,
         window:1,
     })

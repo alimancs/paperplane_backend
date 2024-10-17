@@ -80,8 +80,8 @@ function sendOTP(email, otp) {
     transporter.sendMail({
         from:`aliman2952003@outlook.com`,
         to:email,
-        subject:'Your One-time passcode',
-        text: `Your email confirmation OTP is: ${otp}`
+        subject:'PAPERPLANE:Your One-time passcode',
+        text: `<h1>Your email confirmation OTP is: ${otp}</h1>`
         }, (err, info)=> {
             if (err) {
                 console.error(err);
@@ -124,6 +124,8 @@ app.post('/register',async (request, response)=>{
            lastname,
            followers:0,
            following:0,
+           profilePic:'',
+           bio:'Hey, I am using Paperplane'
          } );
     response.json(userDoc);
 })
@@ -279,6 +281,8 @@ app.get('/profile/:username', async (request, response ) => {
     const { username } = request.params;
     const user = await userm.findOne( { username } );
     const date = user.createdAt;
+    const fullname = `${user.firstname} ${user.lastname}`;
+    const { profilePic, bio } = user;
     const posts = await  postm.find().populate("user", [ 'username' ]);
     const postReverse = posts.reverse();
     const userposts = [];
@@ -290,8 +294,28 @@ app.get('/profile/:username', async (request, response ) => {
     });
 
     const data = { 
+        fullname,
+        profilePic,
+        bio,
         joinDate : date,
         posts : userposts,
+    };
+    response.json(data);
+
+});
+
+//get basic user data to the frontend
+app.get('/basic-user-data/:username', async (request, response ) => {
+
+    const { username } = request.params;
+    const user = await userm.findOne( { username } );
+    const { profilePic, bio, firstname, lastname } = user;
+
+    const data = { 
+        firstname,
+        lastname,
+        profilePic,
+        bio,
     };
     response.json(data);
 
@@ -316,6 +340,19 @@ app.post('/verify-otp', (request, response) => {
     const { otp }= request.body;
     const isverified = verifyOTP(otp);
     response.json({ verification : isverified});
+})
+
+// save edits to user profile
+app.put('/save-edit/:userN', async (request, response) => {
+    const { userN } = request.params;
+    const { firstname, lastname, profilePic, username, bio } = request.body;
+    const user = await userm.findOne( { userN });
+    user.firstname = firstname;
+    user.lastname = lastname;
+    user.profilePic = profilePic;
+    user.username =username;
+    user.bio = bio;
+    await user.save();
 })
 
 

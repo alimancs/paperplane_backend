@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const speakeasy = require('speakeasy');
 const nodemailer = require('nodemailer');
+const bodyParser = require("body-parser");
 require('dotenv').config();
 
 const secretpk = process.env.SECRET_PASSKEY;
@@ -26,13 +27,11 @@ mongoose.connect(process.env.DATABASE_KEY)
 })
 
 const app = express();
-
-app.use(cors( { 
-    credentials:true,
-    origin:['https://paperplane-blog.onrender.com', 'http://localhost:3000']}));
+app.use(bodyParser.json({ limit:'20mb' }));
+app.use(bodyParser.urlencoded( { extended: true, limit: '20mb'}))
+app.use(cors( { credentials:true, origin:['https://paperplane-blog.onrender.com', 'http://localhost:3000']}));
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded( { extended : false }));
 
 // server static files 
 // app.use( '/uploads', express.static( __dirname + '/uploads' ));

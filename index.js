@@ -351,6 +351,7 @@ app.put('/save-edit/:username', async (request, response) => {
     user.username = name;
     user.bio = bio;
     await user.save();
+    response.json({ message:'edit saved'});
 })
 
 

@@ -27,8 +27,8 @@ mongoose.connect(process.env.DATABASE_KEY)
 })
 
 const app = express();
-app.use(bodyParser.json({ limit:'20mb' }));
-app.use(bodyParser.urlencoded( { extended: true, limit: '20mb'}))
+app.use(bodyParser.json({ limit:'50mb' }));
+app.use(bodyParser.urlencoded( { extended: true, limit: '50mb'}));
 app.use(cors( { credentials:true, origin:['https://paperplane-blog.onrender.com', 'http://localhost:3000']}));
 app.use(express.json());
 app.use(cookieParser());
@@ -342,14 +342,14 @@ app.post('/verify-otp', (request, response) => {
 })
 
 // save edits to user profile
-app.put('/save-edit/:userN', async (request, response) => {
-    const { userN } = request.params;
-    const { firstname, lastname, profilePic, username, bio } = request.body;
-    const user = await userm.findOne( { userN });
+app.put('/save-edit/:username', async (request, response) => {
+    const { username } = request.params;
+    const { firstname, lastname, profilePic, name, bio } = request.body;
+    const user = await userm.findOne( { username });
     user.firstname = firstname;
     user.lastname = lastname;
     user.profilePic = profilePic;
-    user.username =username;
+    user.username = name;
     user.bio = bio;
     await user.save();
 })

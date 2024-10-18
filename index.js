@@ -292,6 +292,7 @@ app.get('/profile/:username', async (request, response ) => {
     });
 
     const data = { 
+        id:user._id,
         fullname,
         profilePic,
         bio,

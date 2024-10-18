@@ -161,7 +161,6 @@ app.post('/login', async (request, response) => {
 
 // handle token verification 
 app.get( '/profile', (request, response ) => {
-
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const token = request.headers.authorization;
     let data; 
@@ -276,7 +275,7 @@ app.delete('/editpost/delete/:id', async (request, response) => {
 
 // get a userpost
 app.get('/profile/:username', async (request, response ) => {
-
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username } = request.params;
     const user = await userm.findOne( { username } );
     const date = user.createdAt;

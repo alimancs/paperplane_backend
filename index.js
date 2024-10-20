@@ -197,7 +197,7 @@ app.post( '/addpost', async (request, response) => {
             content, 
             cover,
             user : id,
-            likes:0,
+            likes:[],
           })
 
         response.json(postDoc);
@@ -343,6 +343,7 @@ app.post('/verify-otp', (request, response) => {
 
 // save edits to user profile
 app.put('/save-edit/:username', async (request, response) => {
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username } = request.params;
     const { firstname, lastname, profilePic, name, bio } = request.body;
     const user = await userm.findOne( { username });
@@ -353,6 +354,33 @@ app.put('/save-edit/:username', async (request, response) => {
     user.bio = bio;
     await user.save();
     response.json({ message:'edit saved'});
+})
+
+//add like to post
+app.put('/like/:id',  async (request, response)=> {
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    const newlikes = [];
+    const data = request.body;
+    const { id } = request.params;
+    const postDoc = await postm.findById(id);
+    if (data.like) {
+        postDoc.likes.push(data.username)
+    } else {
+    postDoc.likes.map(user=> {
+        if (user!== data.username) {newlikes.push(user)}
+    })}
+    await postDoc.save();
+    response.json({message:'success'})
+
+})
+
+app.put('/addcomment/:id', async (request, response) => {
+    const data = request.body;
+    const { id } = request.params;
+    const postDoc = await postm.findById(id);
+    postDoc.comments.push(data);
+    await postDoc.save();
+    response.json({message:'success'});
 })
 
 

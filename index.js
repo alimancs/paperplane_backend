@@ -364,11 +364,13 @@ app.put('/like/:id',  async (request, response)=> {
     const { id } = request.params;
     const postDoc = await postm.findById(id);
     if (data.like) {
-        postDoc.likes.push(data.username)
+        postDoc.likes.push(data.liker)
     } else {
     postDoc.likes.map(user=> {
-        if (user!== data.username) {newlikes.push(user)}
-    })}
+        if (user!== data.liker) {newlikes.push(user)}
+    })
+    postDoc.likes = newlikes;
+    }
     await postDoc.save();
     response.json({message:'success'})
 

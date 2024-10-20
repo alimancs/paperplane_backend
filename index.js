@@ -358,7 +358,7 @@ app.put('/save-edit/:username', async (request, response) => {
 
 //add like to post
 app.put('/like/:id',  async (request, response)=> {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const newlikes = [];
     const data = request.body;
     const { id } = request.params;
@@ -377,7 +377,7 @@ app.put('/like/:id',  async (request, response)=> {
 })
 
 app.put('/addcomment/:id', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { commentObj } = request.body;
     const { id } = request.params;
     const postDoc = await postm.findById(id);

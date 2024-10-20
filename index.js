@@ -378,10 +378,10 @@ app.put('/like/:id',  async (request, response)=> {
 
 app.put('/addcomment/:id', async (request, response) => {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    const { commentObj, commentIndex } = request.body;
+    const { commentObj } = request.body;
     const { id } = request.params;
     const postDoc = await postm.findById(id);
-    commentObj[commentIndex].state = '';
+    commentObj.state = '';
     postDoc.comments.push(commentObj);
     await postDoc.save();
     response.json({message:'success'});

@@ -161,9 +161,9 @@ app.post('/login', async (request, response) => {
 })
 
 // handle token verification 
-app.get( '/profile', (request, response ) => {
+app.post( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const token = request.headers.authorization;
+    const token = request.body.authtoken;
     let data; 
 
     jwt.verify( token, secretpk, {}, (error, decodedData) => {

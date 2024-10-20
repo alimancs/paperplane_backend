@@ -144,9 +144,10 @@ app.post('/login', async (request, response) => {
         if (passOk) {
            const token =  jwt.sign( { 
                 username,
-                id:userDoc._id
+                id:userDoc._id,
+                dp:userDoc.profilePic,
                 }, secretpk,
-                { expiresIn : '10h'})
+                { expiresIn : '24h'})
         response.json( { authToken: token,
                           message: 'login successful',
                            userData: { username, id: userDoc._id, dp:userDoc.profilePic },
@@ -372,7 +373,7 @@ app.put('/like/:id',  async (request, response)=> {
     postDoc.likes = newlikes;
     }
     await postDoc.save();
-    response.json({message:'success'})
+    response.json({message:'success'});
 
 })
 

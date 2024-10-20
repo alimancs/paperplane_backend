@@ -149,7 +149,7 @@ app.post('/login', async (request, response) => {
                 { expiresIn : '10h'})
         response.json( { authToken: token,
                           message: 'login successful',
-                           userData: { username, id: userDoc._id },
+                           userData: { username, id: userDoc._id, dp:userDoc.profilePic },
                         } );
 
         } else {
@@ -215,7 +215,7 @@ app.get( '/posts', async ( request, response ) => {
 // handles page view 
 app.get( '/post/:id', async ( request, response) => {
     const { id } = request.params;
-    const postData = await postm.findById(id).populate( 'user', [ 'username' ]);
+    const postData = await postm.findById(id).populate( 'user', [ 'username', 'profilePic' ]);
     response.json(postData);
 })
 
@@ -377,10 +377,11 @@ app.put('/like/:id',  async (request, response)=> {
 })
 
 app.put('/addcomment/:id', async (request, response) => {
-    const data = request.body;
+    const { commentObj, commentIndex } = request.body;
     const { id } = request.params;
     const postDoc = await postm.findById(id);
-    postDoc.comments.push(data);
+    commentObj[commentIndex].state = '';
+    postDoc.comments.push(commentObj);
     await postDoc.save();
     response.json({message:'success'});
 })

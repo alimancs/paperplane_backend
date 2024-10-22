@@ -392,10 +392,12 @@ app.get('/comments/:id', async (request, response) => {
 
     const { id } = request.params;
     const postDoc = await postm.findById(id);
-    const commentsData = postDoc.comments.map( async (c) => {
+    const commentsData = postDoc.comments;
+    commentsData.map( async (c) => {
     const username = c.user;
+    console.log(username, c.text);
     const commenter = await userm.findOne( { username } );
-    return { user:username, dp:commenter.profilePic, text:c.text, state:''}
+    return { user:username, dp:commenter.profilePic, text:c.text, state:''};
     })
 
     response.json(commentsData);

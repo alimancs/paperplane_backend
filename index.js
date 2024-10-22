@@ -388,7 +388,7 @@ app.put('/addcomment/:id', async (request, response) => {
 });
 
 app.get('/comments/:id', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    // response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
 
     const { id } = request.params;
     const postDoc = await postm.findById(id);

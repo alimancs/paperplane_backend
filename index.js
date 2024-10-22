@@ -145,12 +145,11 @@ app.post('/login', async (request, response) => {
            const token =  jwt.sign( { 
                 username,
                 id:userDoc._id,
-                dp:userDoc.profilePic,
                 }, secretpk,
                 { expiresIn : '24h'})
         response.json( { authToken: token,
                           message: 'login successful',
-                           userData: { username, id: userDoc._id, dp:userDoc.profilePic },
+                           userData: { username, id: userDoc._id},
                         } );
 
         } else {
@@ -163,7 +162,7 @@ app.post('/login', async (request, response) => {
 // handle token verification 
 app.post( '/profile', (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
-    const token = request.body.authtoken;
+    const token = request.headers.authorization;
     let data; 
 
     jwt.verify( token, secretpk, {}, (error, decodedData) => {

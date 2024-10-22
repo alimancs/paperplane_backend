@@ -215,7 +215,7 @@ app.get( '/posts', async ( request, response ) => {
 // handles page view 
 app.get( '/post/:id', async ( request, response) => {
     const { id } = request.params;
-    const postData = await postm.findById(id).populate( 'user', [ 'username', 'profilePic' ]);
+    const postData = await postm.findById(id).populate( 'user', [ 'username' ]);
     response.json(postData);
 })
 

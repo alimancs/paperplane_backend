@@ -170,6 +170,7 @@ app.post( '/profile', (request, response ) => {
             data = null;
         } else {
             data = decodedData;
+            
         }
     });
     response.json( data );

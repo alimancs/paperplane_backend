@@ -169,11 +169,10 @@ app.post( '/profile', (request, response ) => {
         if ( error ) {
             data = null;
         } else {
-            data = decodedData;
-            const { username } = data;
+            const { username } = decodedData;
             const user = await userm.findOne( { username } );
             const dp = user.profilePic;
-            data['dp'] = dp;
+            data = { ...decodedData, dp }
 
         }
     });

@@ -160,24 +160,27 @@ app.post('/login', async (request, response) => {
 })
 
 // handle token verification 
-app.post( '/profile', (request, response ) => {
+app.post( '/profile', async (request, response ) => {
     response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const token = request.headers.authorization;
     let data; 
-
-    jwt.verify( token, secretpk, {}, async (error, decodedData) => {
-        if ( error ) {
-            data = null;
-        } else {
-            const { username } = decodedData;
-            const user = await userm.findOne( { username } );
-            const dp = user.profilePic;
-            data = { ...decodedData, dp }
-
+    let decoded_token;
+ 
+    try {
+        decoded_token = jwt.verify( token, secretpk);
+        const { username } = decoded_token;
+        const user = await userm.findOne( { username } );
+        const dp = user.profilePic;
+        data = { ...decoded_token, dp }
+        response.json( data );
+    } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+           decoded_token = null;
+           response.json(decoded_token);
         }
+    }
+        
     });
-    response.json( data );
-})
 
 // handle logging out
 // app.post( '/logout', (request, response) => {

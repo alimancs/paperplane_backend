@@ -165,12 +165,16 @@ app.post( '/profile', (request, response ) => {
     const token = request.headers.authorization;
     let data; 
 
-    jwt.verify( token, secretpk, {}, (error, decodedData) => {
+    jwt.verify( token, secretpk, {}, async (error, decodedData) => {
         if ( error ) {
             data = null;
         } else {
             data = decodedData;
-            
+            const { username } = data;
+            const user = await userm.findOne( { username } );
+            const dp = user.profilePic;
+            data['dp'] = dp;
+
         }
     });
     response.json( data );

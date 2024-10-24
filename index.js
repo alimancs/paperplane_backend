@@ -288,7 +288,7 @@ app.get('/profile/:username', async (request, response ) => {
     const date = user.createdAt;
     const fullname = `${user.firstname} ${user.lastname}`;
     const { profilePic, bio } = user;
-    const posts = await  postm.find().populate("user", [ 'username' ]);
+    const posts = await  postm.find().populate("user", [ 'username', 'profilePic' ]);
     const postReverse = posts.reverse();
     const userposts = [];
 

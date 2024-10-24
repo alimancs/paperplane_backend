@@ -214,7 +214,7 @@ app.post( '/addpost', async (request, response) => {
 
 // handles displaying post on homepage
 app.get( '/posts', async ( request, response ) => {
-   const posts = await  postm.find().populate("user", [ 'username' ]);
+   const posts = await  postm.find().populate("user", [ 'username', 'profilePic' ]);
    const postReverse = posts.reverse();
    response.json(postReverse);
 })

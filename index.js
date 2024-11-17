@@ -132,7 +132,7 @@ app.post('/register',async (request, response)=>{
 
 // handle login
 app.post('/login', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username, password } = request.body;
     const userDoc = await userm.findOne( { username } );
     if (!userDoc) {
@@ -161,7 +161,7 @@ app.post('/login', async (request, response) => {
 
 // handle token verification 
 app.post( '/profile', async (request, response ) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const token = request.headers.authorization;
     let data; 
     let decoded_token;
@@ -189,7 +189,7 @@ app.post( '/profile', async (request, response ) => {
 
 // handles adding of posts
 app.post( '/addpost', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { title, summary, content, cover } = request.body;
 
 
@@ -228,7 +228,7 @@ app.get( '/post/:id', async ( request, response) => {
 
 // handles post edit 
 app.put('/post/:id', async ( request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { title, summary, content, cover } = request.body;
     const { id } = request.params;
 
@@ -282,7 +282,7 @@ app.delete('/editpost/delete/:id', async (request, response) => {
 
 // get a userpost
 app.get('/profile/:username', async (request, response ) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username } = request.params;
     const user = await userm.findOne( { username } );
     const date = user.createdAt;
@@ -350,7 +350,7 @@ app.post('/verify-otp', (request, response) => {
 
 // save edits to user profile
 app.put('/save-edit/:username', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { username } = request.params;
     const { firstname, lastname, profilePic, name, bio } = request.body;
     const user = await userm.findOne( { username });
@@ -365,7 +365,7 @@ app.put('/save-edit/:username', async (request, response) => {
 
 //add like to post
 app.put('/like/:id',  async (request, response)=> {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const newlikes = [];
     const data = request.body;
     const { id } = request.params;
@@ -384,7 +384,7 @@ app.put('/like/:id',  async (request, response)=> {
 })
 
 app.put('/addcomment/:id', async (request, response) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { commentObj } = request.body;
     const { id } = request.params;
     const postDoc = await postm.findById(id);
@@ -395,7 +395,7 @@ app.put('/addcomment/:id', async (request, response) => {
 });
 
 app.get('/comments/:id', async (request, response) => {
-    // response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // response.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
 
     const { id } = request.params;
     const postDoc = await postm.findById(id);

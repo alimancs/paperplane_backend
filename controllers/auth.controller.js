@@ -76,7 +76,7 @@ const register = ( req, res ) => {
 }
 
 const genOtpAndEmail = async ( req, res ) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    // res.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     const { email } = req.body;
     let key;
     
@@ -102,7 +102,7 @@ const genOtpAndEmail = async ( req, res ) => {
 }
 
 const verifyOTPToken = async ( req, res ) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
+    // res.setHeader('Access-Control-Allow-Origin', 'https://paperplane-blog.onrender.com');
     try {
         const { email, otpToken } = req.body;
         const savedSecretAuthKey = await secretAuthKeyModel.findOne( { email:email } );

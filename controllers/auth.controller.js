@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import secretAuthKeyModel from '../models/secretAuthKey.js';
 import speakeasy from 'speakeasy';
+import userModel from '../models/user.js';
 
 const secretpk = process.env.SECRET_PASSKEY;
 
@@ -70,9 +71,31 @@ const sendOTP = async (email, otp) => {
     }
 }
 
-const register = ( req, res ) => {
-    const { email, password } = req.body;
-    res.status(200).json( { message:'route is working perfectly', bodyData:{ email, password}});
+const register = async ( req, res ) => {
+    const {
+        password,
+        username,
+        firstname,
+        lastname,
+        email,
+    } = req.body;
+    const data = {
+        password,
+        username,
+        firstname,
+        lastname,
+        email,
+    }
+    console.log( 'Gotten data, from user', data);
+
+    try {
+        await userModel.create( data );
+        console.log('successfully created user account');
+        res.status(200).json( { success:true, message:`user account created`});
+    } catch (err) {
+        console.log('Error creating account')
+        res.status(500).json( { success:false, message:`Something went wrong: ${err.message}` } );
+    }
 }
 
 const genOtpAndEmail = async ( req, res ) => {
@@ -80,25 +103,38 @@ const genOtpAndEmail = async ( req, res ) => {
     const { email } = req.body;
     let key;
     
-    const savedSecretAuthKey = await secretAuthKeyModel.findOne( { email:email });
-    if ( !savedSecretAuthKey ) {
-        key = speakeasy.generateSecret({length:20}).base32; 
-        await secretAuthKeyModel.create( { key:key, email:email });
-        console.log('created a secret key and saved it to database');
-    } else {
-        key = savedSecretAuthKey.key;
-        console.log('used already saved secret key that is attributed to the recipient email');
-    }
-    const otpToken = generateOTP(key);
+    try {
+        // check if account with the same email already exists
+        const doesEmailExist = await userModel.findOne( { email:email } );
+        if ( doesEmailExist ) {
+            res.status(200).json( { success:false, msg:'Account with this email already exists'})
+        }
 
-    const sendOtpToEmail = await sendOTP(email, otpToken);
-    console.log(`sent an otp email to: ${email}`);
+        //check for savedAuthKey
+        const savedSecretAuthKey = await secretAuthKeyModel.findOne( { email:email });
+        if ( !savedSecretAuthKey ) {
+            key = speakeasy.generateSecret({length:20}).base32; 
+            await secretAuthKeyModel.create( { key:key, email:email });
+            console.log('created a secret key and saved it to database');
+        } else {
+            key = savedSecretAuthKey.key;
+            console.log('used already saved secret key that is attributed to the recipient email');
+        }
+        const otpToken = generateOTP(key);
 
-    if ( sendOtpToEmail.success ) {
-        res.status(200).json( { message:'otp gen success', sendOtpToEmail });
-    } else {
-        res.status(500).json( { message:'otp gen failed', sendOtpToEmail });
+        // send otp to email
+        const sendOtpToEmail = await sendOTP(email, otpToken);
+        console.log(`sent an otp email to: ${email}`);
+
+        if ( sendOtpToEmail.success ) {
+            res.status(200).json( { success:true, msg:'OTP gen success', sendOtpToEmail });
+        } else {
+            res.status(500).json( { success:false, msg:'OTP gen failed', sendOtpToEmail });
+        } 
+    } catch (err) {
+        res.status(500).json( { success:false, error:err.message, msg:'error occurred' } );
     }
+
 }
 
 const verifyOTPToken = async ( req, res ) => {
